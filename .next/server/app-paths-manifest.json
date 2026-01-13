@@ -1,0 +1,10 @@
+{
+  "/page": "app/page.js",
+  "/research/page": "app/research/page.js",
+  "/write/page": "app/write/page.js",
+  "/context/page": "app/context/page.js",
+  "/rewrite/page": "app/rewrite/page.js",
+  "/drafts/page": "app/drafts/page.js",
+  "/output/page": "app/output/page.js",
+  "/settings/page": "app/settings/page.js"
+}
