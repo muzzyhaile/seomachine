@@ -1,10 +1,20 @@
 {
-  "/page": "app/page.js",
-  "/research/page": "app/research/page.js",
-  "/write/page": "app/write/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/context/[filename]/route": "app/api/context/[filename]/route.js",
+  "/api/research/route": "app/api/research/route.js",
+  "/api/write/route": "app/api/write/route.js",
+  "/api/rewrite/route": "app/api/rewrite/route.js",
+  "/drafts/[slug]/page": "app/drafts/[slug]/page.js",
+  "/context/[slug]/page": "app/context/[slug]/page.js",
+  "/examples/[...slug]/page": "app/examples/[...slug]/page.js",
   "/context/page": "app/context/page.js",
-  "/rewrite/page": "app/rewrite/page.js",
   "/drafts/page": "app/drafts/page.js",
+  "/examples/page": "app/examples/page.js",
   "/output/page": "app/output/page.js",
-  "/settings/page": "app/settings/page.js"
+  "/output/[slug]/page": "app/output/[slug]/page.js",
+  "/research/page": "app/research/page.js",
+  "/page": "app/page.js",
+  "/settings/page": "app/settings/page.js",
+  "/rewrite/page": "app/rewrite/page.js",
+  "/write/page": "app/write/page.js"
 }
