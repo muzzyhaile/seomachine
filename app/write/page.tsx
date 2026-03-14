@@ -2,8 +2,9 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { PenTool, Loader2, Copy, Check, Download, ArrowRight, RefreshCw, ChevronDown, ChevronUp, Sparkles } from 'lucide-react'
+import { PenTool, Loader2, ArrowRight, RefreshCw, ChevronDown, ChevronUp, Sparkles } from 'lucide-react'
 import MarkdownRenderer from '@/components/MarkdownRenderer'
+import OutputPanel from '@/components/OutputPanel'
 import LanguageSelector, { getLanguageName } from '@/components/LanguageSelector'
 
 interface ResearchData {
@@ -19,7 +20,7 @@ function WritePageContent() {
   const [language, setLanguage] = useState('en')
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
+  const [filename, setFilename] = useState<string | undefined>()
   const [researchData, setResearchData] = useState<ResearchData | null>(null)
   const [showResearch, setShowResearch] = useState(false)
 
@@ -58,7 +59,7 @@ function WritePageContent() {
       })
       
       const data = await response.json()
-      setResult(data.content || data.error)
+      if (data.error) { setResult('Error: ' + data.error) } else { setResult(data.article); setFilename(data.filename) }
     } catch (error) {
       setResult('Error generating content. Please try again.')
     } finally {
@@ -258,31 +259,7 @@ function WritePageContent() {
             </div>
           </div>
 
-          {/* Article Content */}
-          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border-b border-gray-200 bg-gray-50 gap-3">
-              <h2 className="font-semibold text-gray-900">Generated Article</h2>
-              <div className="flex gap-2">
-                <button
-                  onClick={copyToClipboard}
-                  className="flex-1 sm:flex-none px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-center gap-2"
-                >
-                  {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-                  {copied ? 'Copied!' : 'Copy'}
-                </button>
-                <button
-                  onClick={downloadMarkdown}
-                  className="flex-1 sm:flex-none px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Download
-                </button>
-              </div>
-            </div>
-            <div className="p-5 sm:p-8 max-h-[600px] overflow-y-auto">
-              <MarkdownRenderer content={result} />
-            </div>
-          </div>
+          <OutputPanel content={result} filename={filename} savedDir="output" color="purple" />
         </div>
       )}
     </div>

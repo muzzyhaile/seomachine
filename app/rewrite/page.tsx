@@ -2,8 +2,9 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { RefreshCw, Loader2, Copy, Check, Download, Link, ChevronDown, ChevronUp, FileText, Save } from 'lucide-react'
+import { RefreshCw, Loader2, Check, Link, ChevronDown, ChevronUp, FileText } from 'lucide-react'
 import MarkdownRenderer from '@/components/MarkdownRenderer'
+import OutputPanel from '@/components/OutputPanel'
 import LanguageSelector, { getLanguageName } from '@/components/LanguageSelector'
 
 interface ArticleData {
@@ -21,7 +22,7 @@ function RewritePageContent() {
   const [existingContent, setExistingContent] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
+  const [filename, setFilename] = useState<string | undefined>()
   const [articleData, setArticleData] = useState<ArticleData | null>(null)
   const [showOriginal, setShowOriginal] = useState(false)
 
@@ -63,7 +64,7 @@ function RewritePageContent() {
       })
       
       const data = await response.json()
-      setResult(data.content || data.error)
+      if (data.error) { setResult('Error: ' + data.error) } else { setResult(data.rewrite); setFilename(data.filename) }
     } catch (error) {
       setResult('Error rewriting content. Please try again.')
     } finally {
@@ -310,14 +311,7 @@ function RewritePageContent() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-gray-200 bg-gray-50">
-              <h2 className="font-semibold text-gray-900">Rewritten Article</h2>
-            </div>
-            <div className="p-5 sm:p-8 max-h-[600px] overflow-y-auto">
-              <MarkdownRenderer content={result} />
-            </div>
-          </div>
+          <OutputPanel content={result} filename={filename} savedDir="rewrites" color="orange" />
         </div>
       )}
     </div>

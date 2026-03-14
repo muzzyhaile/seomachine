@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, Loader2, FileText, Target, Users, TrendingUp, ArrowRight, PenTool } from 'lucide-react'
 import MarkdownRenderer from '@/components/MarkdownRenderer'
+import OutputPanel from '@/components/OutputPanel'
 import LanguageSelector, { getLanguageName } from '@/components/LanguageSelector'
 
 export default function ResearchPage() {
@@ -12,6 +13,7 @@ export default function ResearchPage() {
   const [language, setLanguage] = useState('en')
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<string | null>(null)
+  const [filename, setFilename] = useState<string | undefined>()
   const [researchedTopic, setResearchedTopic] = useState('')
 
   const handleResearch = async () => {
@@ -28,7 +30,7 @@ export default function ResearchPage() {
       })
       
       const data = await response.json()
-      setResult(data.brief || data.error)
+      if (data.error) { setResult('Error: ' + data.error) } else { setResult(data.brief); setFilename(data.filename) }
       setResearchedTopic(topic)
     } catch (error) {
       setResult('Error performing research. Please try again.')
@@ -164,14 +166,7 @@ export default function ResearchPage() {
           </div>
 
           {/* Research Content */}
-          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="p-4 border-b border-gray-200 bg-gray-50">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Research Brief: {researchedTopic}</h2>
-            </div>
-            <div className="p-5 sm:p-8 max-h-[600px] overflow-y-auto">
-              <MarkdownRenderer content={result} />
-            </div>
-          </div>
+          <OutputPanel content={result} filename={filename} savedDir="research" color="blue" />
         </div>
       )}
     </div>

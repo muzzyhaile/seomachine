@@ -7,15 +7,10 @@ interface MarkdownRendererProps {
   className?: string
 }
 
-export default function MarkdownRenderer({ content, className = '' }: MarkdownRendererProps) {
-  const [html, setHtml] = useState('')
+export function convertMarkdown(md: string): string {
+  let result = md
 
-  useEffect(() => {
-    // Simple markdown to HTML conversion
-    const convertMarkdown = (md: string) => {
-      let result = md
-      
-      // Escape HTML
+  // Escape HTML
       result = result.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       
       // Headers
@@ -60,17 +55,21 @@ export default function MarkdownRenderer({ content, className = '' }: MarkdownRe
       })
       result = processed.join('\n')
       
-      // Clean up empty paragraphs
-      result = result.replace(/<p class="[^"]*"><\/p>/g, '')
-      
-      return result
-    }
-    
+  // Clean up empty paragraphs
+  result = result.replace(/<p class="[^"]*"><\/p>/g, '')
+
+  return result
+}
+
+export default function MarkdownRenderer({ content, className = '' }: MarkdownRendererProps) {
+  const [html, setHtml] = useState('')
+
+  useEffect(() => {
     setHtml(convertMarkdown(content))
   }, [content])
 
   return (
-    <div 
+    <div
       className={`prose prose-gray max-w-none ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
